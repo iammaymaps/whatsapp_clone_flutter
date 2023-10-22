@@ -2,17 +2,20 @@ import 'package:country_picker/country_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:whatsapp_clone_flutter/colors.dart';
 import 'package:whatsapp_clone_flutter/common/widgets/customButton.dart';
+import 'package:riverpod/riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:whatsapp_clone_flutter/feature/auth/controller/auth_controller.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
+class LoginScreen extends ConsumerStatefulWidget {
+  const LoginScreen({Key? key}) : super(key: key);
 
   static const routeName = '/login-screen';
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   final phoneController = TextEditingController();
   Country? country;
   @override
@@ -30,6 +33,15 @@ class _LoginScreenState extends State<LoginScreen> {
             country = _country;
           });
         });
+  }
+
+  void sendPhoneNumber() {
+    String phoneNumber = phoneController.text.trim();
+    if (country != null && phoneNumber.isNotEmpty) {
+      ref
+          .read(authControllerProvider)
+          .signInWithPhone(context, '${country!.phoneCode} $phoneNumber');
+    }
   }
 
   @override
