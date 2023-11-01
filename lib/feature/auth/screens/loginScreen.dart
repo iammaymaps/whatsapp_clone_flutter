@@ -38,9 +38,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void sendPhoneNumber() {
     String phoneNumber = phoneController.text.trim();
     if (country != null && phoneNumber.isNotEmpty) {
+      String formattedPhoneNumber = '+${country!.phoneCode}${phoneNumber}';
       ref
           .read(authControllerProvider)
-          .signInWithPhone(context, '${country!.phoneCode} $phoneNumber');
+          .signInWithPhone(context, formattedPhoneNumber);
     }
   }
 
@@ -86,7 +87,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               SizedBox(
                 width: 90,
                 child: CustomButton(
-                  onPressed: () {},
+                  onPressed: sendPhoneNumber,
                   text: 'NEXT',
                 ),
               ),
