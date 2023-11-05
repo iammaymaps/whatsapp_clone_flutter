@@ -43,4 +43,8 @@ class AuthController {
     authRepository.saveUserDataToFirebase(
         name: name, profilePic: profilePic, ref: ref, context: context);
   }
+
+  Stream<UserModel> userData(String userID) {
+    return authRepository.userData(userID);
+  }
 }

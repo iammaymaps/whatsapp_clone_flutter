@@ -21,8 +21,7 @@ class AuthRepository {
   final FirebaseFirestore firestore;
   AuthRepository({
     required this.auth,
-    required this.
-    firestore,
+    required this.firestore,
   });
 
   Future<UserModel?> getCurrentUserData() async {
@@ -64,9 +63,8 @@ class AuthRepository {
     try {
       PhoneAuthCredential credential = PhoneAuthProvider.credential(
           verificationId: verificationId, smsCode: userOTP);
-      await auth.signInWithCredential(credential);
 
-      // ignore: use_build_context_synchronously
+      await auth.signInWithCredential(credential);
       Navigator.pushNamedAndRemoveUntil(
           context, UserInformationScreen.routeName, (route) => false);
     } on FirebaseAuthException catch (e) {
@@ -94,7 +92,7 @@ class AuthRepository {
           uid: uid,
           profilePic: photoUrl,
           isOnline: true,
-          phoneNumber: auth.currentUser!.uid,
+          phoneNumber: auth.currentUser!.phoneNumber!,
           groupId: []);
 
       await firestore.collection('users').doc(uid).set(user.toMap());
@@ -106,5 +104,13 @@ class AuthRepository {
     } catch (e) {
       showSnackBar(context: context, content: e.toString());
     }
+  }
+
+  Stream<UserModel> userData(String userID) {
+    return firestore
+        .collection('users')
+        .doc(userID)
+        .snapshots()
+        .map((event) => UserModel.fromMap(event.data()!));
   }
 }
